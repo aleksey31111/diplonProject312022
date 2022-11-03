@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/style_detail_product.css' %}" xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block content %}
+<div class="post">
+	{% if product.image %}
+    <div class="img">
+        <img src="{{ product.image.url }}" class="image" alt="">
+    </div>
+    {% else %}
+    <div>
+        <img src="{% static 'img/default_shop.jpg' %}" alt="">
+    </div>
+    {% endif %}
+    {% autoescape off %}
+    <p>Категория: <h1>{{ product.category }}</h1></p>
+    <p>Описание: <h4>{{ product.description|striptags|safe }}</h4></p>
+    <p>Короткое описание: <h5>{{ product.short_description|striptags|safe }}</h5></p>
+    <p>Цена: <h3>{{ product.price|striptags|safe }} руб</h3></p>
+    <p>Количество: <h4>{{ product.quantity|striptags|safe }} шт</h4></p>
+    <p>Время добавления товара: {{ product.time }}</p>
+    <p>Время обновления товара: {{ product.time_update }}</p>
+
+</div>
+
+{% endautoescape %}
+
+
+
+{% endblock content %}

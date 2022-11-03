@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block css %}<link href="{% static 'css/products.css' %}" rel="stylesheet">{% endblock %}
+{% block content %}
+
+<!-- Page Content -->
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-3">
+
+            <h1 class="my-4">Магазин Устройств</h1>
+            <div class="list-group">
+                 <a href="{% url 'products' %}" class="list-group-item">Все категории</a>
+                {% for category in categories %}
+                <a href="{% url 'category' category.id %}" class="list-group-item">{{ category.name }}</a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!-- /.col-lg-3 -->
+
+        <div class="col-lg-9">
+
+            <div>
+                <h3 style="margin: 50px">Поиск</h3>
+                <form action="{% url 'products' %}">
+                    <input type="search" class="search" name="search">
+                </form>
+            </div>
+
+            <div class="row">
+                {% for product in products %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src="/media/{{ product.image }}"
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+
+                                <a href="{{ product.get_absolut_url }}">{{ product.name|striptags|safe|truncatewords:30 }}</a>
+
+                            </h4>
+                            <p class="card-text">Описание: {{ product.description|striptags|safe|truncatewords:20}}</p>
+                            <p class="card-text">Краткое описание: {{ product.short_description|safe|truncatewords:10}}</p>
+                            <p class="card-text">Количество: {{ product.quantity|safe|truncatewords:30}}</p>
+                            <h5>Цена: {{ product.price }} руб.</h5>
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{% url 'basket_add' product.id %}">
+                                <button type="button" class="btn btn-outline-success">
+                                    Отправить в корзину
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            {% if products %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}" tabindex="-1" aria-disabled="true">Предыдущая</a>
+                    </li>
+                    {% endif %}
+                    {% if products.has_other_pages %}
+                    {% for page in products.paginator.page_range %}
+                    <li class="page-item
+                    {% if page == products.number %} active {% endif %}">
+                        <a class="page-link" href="?page={{ page }}">
+                            {{ page }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                    {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}">Следующая</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+<!-- /.container -->
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Store 2021</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+{% endblock %}
